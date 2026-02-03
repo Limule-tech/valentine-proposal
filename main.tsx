@@ -10,16 +10,18 @@ const NO_PHRASES = [
   "Don't break my heart :(",
   "What about a maybe?",
   "Please don't do this to me, I'm fragile",
-  "PLEASEEEEEEEEEEE DON'T SAY NO!!!!",
 ];
 
 function App() {
   const [noClicks, setNoClicks] = useState(0);
   const [isValentine, setIsValentine] = useState(false);
-  const yesButtonSize = (noClicks * 20) + 16;
+  const yesButtonSize = (noClicks * 18) + 16;
 
-  const firstImg = "https://media.tenor.com/VIChDQ6ejRQAAAAj/jumping-bear-hearts-no-png.gif";
-  const secondImg = "https://media.tenor.com/f1xnRxTRxLAAAAAj/bears-with-kisses-bg.gif";
+  // 🌸 PAIMON & RIMURU 🌸
+  const firstImg =
+    "https://tenor.com/bpGyq.gif";
+  const secondImg =
+    "https://giphy.com/gifs/art-anime-animation-gRSqTmhQ3ayroAQ04S";
 
   const handleNo = () => {
     setNoClicks(prev => prev + 1);
@@ -27,6 +29,7 @@ function App() {
 
   const handleYes = () => {
     setIsValentine(true);
+    new Audio("https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3").play();
   };
 
   return (
@@ -39,61 +42,87 @@ function App() {
         height: "100vh",
         fontFamily: "Arial, sans-serif",
         textAlign: "center",
+        background: "linear-gradient(180deg, #ffe6f0, #fff)",
+        overflow: "hidden",
       }}
     >
-      {!isValentine
-        ? (
-          <>
-            <img src={firstImg} />
-            <h1>Will you be my Valentine? 💘</h1>
-            <div>
-              <button
-                onClick={handleYes}
-                style={{
-                  fontSize: `${yesButtonSize}px`,
-                  margin: "10px",
-                  padding: "10px 20px",
-                  backgroundColor: "green",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Yes
-              </button>
-              <button
-                onClick={handleNo}
-                style={{
-                  fontSize: "16px",
-                  margin: "10px",
-                  padding: "10px 20px",
-                  backgroundColor: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                {noClicks === 0 ? "No" : NO_PHRASES[Math.min(noClicks - 1, NO_PHRASES.length - 1)]}
-              </button>
-            </div>
-          </>
-        )
-        : (
-          <>
-            <img src={secondImg} />
-            <div
+      {!isValentine ? (
+        <>
+          <img
+            src={firstImg}
+            style={{
+              width: "200px",
+              animation: "bounce 1.6s infinite",
+            }}
+          />
+
+          <h1 style={{ color: "#ff4d88" }}>
+            Will you be my Valentine? 💘
+          </h1>
+
+          <div>
+            <button
+              onClick={handleYes}
               style={{
-                fontSize: "48px",
-                color: "pink",
-                fontWeight: "bold",
+                fontSize: `${yesButtonSize}px`,
+                margin: "10px",
+                padding: "12px 26px",
+                backgroundColor: "#ff4d88",
+                color: "white",
+                border: "none",
+                borderRadius: "999px",
+                cursor: "pointer",
+                boxShadow: "0 0 10px rgba(255,77,136,0.6)",
+                transition: "0.2s ease",
               }}
             >
-              Yay!!! 💖🎉
-            </div>
-          </>
-        )}
+              Yes 💖
+            </button>
+
+            <button
+              onClick={handleNo}
+              style={{
+                fontSize: "16px",
+                margin: "10px",
+                padding: "10px 22px",
+                backgroundColor: "#aaa",
+                color: "white",
+                border: "none",
+                borderRadius: "999px",
+                cursor: "pointer",
+              }}
+            >
+              {noClicks === 0
+                ? "No"
+                : NO_PHRASES[Math.min(noClicks - 1, NO_PHRASES.length - 1)]}
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="hearts"></div>
+
+          <img
+            src={secondImg}
+            style={{
+              width: "220px",
+              animation: "pop 0.6s ease-out",
+            }}
+          />
+
+          <div
+            style={{
+              fontSize: "52px",
+              color: "#ff4d88",
+              fontWeight: "bold",
+              marginTop: "20px",
+              textShadow: "0 0 15px rgba(255,77,136,0.7)",
+            }}
+          >
+            Yay!!! 💖🎉
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -101,17 +130,43 @@ function App() {
 function client() {
   createRoot(document.getElementById("root")).render(<App />);
 }
-if (typeof document !== "undefined") { client(); }
+if (typeof document !== "undefined") {
+  client();
+}
 
-export default async function server(request: Request): Promise<Response> {
+export default async function server() {
   return new Response(
     `
     <html>
       <head>
-        <title>Valentine's Day Invitation</title>
+        <title>Valentine 💘</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-          body { margin: 0; font-family: Arial, sans-serif; }
+          body { margin: 0; }
+
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+          }
+
+          @keyframes pop {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+
+          .hearts::before {
+            content: "💖 💕 💘 💗 💓";
+            position: absolute;
+            bottom: -40px;
+            font-size: 40px;
+            animation: floatUp 3s ease-in-out infinite;
+          }
+
+          @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+          }
         </style>
       </head>
       <body>
@@ -121,8 +176,6 @@ export default async function server(request: Request): Promise<Response> {
       </body>
     </html>
   `,
-    {
-      headers: { "content-type": "text/html" },
-    },
+    { headers: { "content-type": "text/html" } }
   );
-}
+        }
